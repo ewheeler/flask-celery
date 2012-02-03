@@ -169,11 +169,28 @@ class camqadm(Command):
         return AMQPAdminCommand(app=current_celery()).run(*remaining_args)
 
 
+class celerymon(Command):
+    """Runs the Celery event monitor."""
+    command = None
+
+    def get_options(self):
+        return filter(None, map(to_Option, self.mon.get_options()))
+
+    def run(self, **kwargs):
+        self.mon.run(**kwargs)
+
+    @cached_property
+    def mon(self):
+        from celerymon.bin.celerymon import MonitorCommand
+        return MonitorCommand(app=current_celery())
+
+
 commands = {"celeryd": celeryd,
             "celerybeat": celerybeat,
             "celeryev": celeryev,
             "celeryctl": celeryctl,
-            "camqadm": camqadm}
+            "camqadm": camqadm,
+            "celerymon": celerymon}
 
 
 def install_commands(manager):

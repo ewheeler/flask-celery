@@ -1,2 +1,3 @@
 Flask-Script
 celery>=2.2.0
+celerymon
